@@ -1,0 +1,9 @@
+driver:
+    get: /driver/
+        response : {"message":"ok/err-msg", "fail":boolean, "data": driver_arr|[]} // per driver attach assigned routes
+    post: /driver/
+        response : {"message":"ok/err-msg", "fail":boolean}
+        request : {"data": {"name":"", "phone":"", "address":"", }}
+    put: /driver/
+        response : {"message":"ok/err-msg", "fail":boolean}
+        request : {"data": {"name":"", "phone":"", "address":"", }, "type":"ad|nm|ph"} // address, name & phone respectively
