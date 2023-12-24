@@ -11,7 +11,7 @@ def get_routes():
         ] = f"{current_route['id']}-{current_route['company']}-{current_route['shift']}".lower()
         current_route["employees"] = Employee.objects.filter(
             route_id=route.to_object()["id"]
-        ).values()
+        )[0].to_object()
         route_acc_list.append(current_route)
 
     return {"message": "success", "error": False, "data": route_acc_list}
