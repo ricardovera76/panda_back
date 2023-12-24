@@ -28,10 +28,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-$*2t!_+-fce-3&28ume&9y7dzf=pp)qgwmh+5)j-2_^6m=h659"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = False
+# DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS=['*']
+ALLOWED_HOSTS=['arviel.pythonanywhere.com','localhost','127.0.0.1','*']
 
 
 # USE OF CORS
