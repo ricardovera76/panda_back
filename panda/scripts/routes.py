@@ -6,12 +6,13 @@ def get_routes():
     route_acc_list = []
     for route in route_list:
         current_route = route.to_object()
+        # print(current_route)
         current_route[
             "name"
         ] = f"{current_route['id']}-{current_route['company']}-{current_route['shift']}".lower()
-        current_route["employees"] = Employee.objects.filter(
-            route_id=route.to_object()["id"]
-        )[0].to_object()
+        employees_list = Employee.objects.filter(route_id=current_route["id"])
+        employees_list_len = len(employees_list)
+        current_route["employees"] = [employee.to_object() for employee in employees_list] if employees_list_len > 0 else []
         route_acc_list.append(current_route)
 
     return {"message": "success", "error": False, "data": route_acc_list}
