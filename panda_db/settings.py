@@ -31,13 +31,16 @@ SECRET_KEY = "django-insecure-$*2t!_+-fce-3&28ume&9y7dzf=pp)qgwmh+5)j-2_^6m=h659
 DEBUG = True
 # DEBUG = False
 
-ALLOWED_HOSTS=['.vercel.app','localhost','127.0.0.1']
+ALLOWED_HOSTS=['panda-back.vercel.app','localhost','127.0.0.1']
 
 
 # USE OF CORS
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8000",
+    "http://panda-back.vercel.app",
+    "https://panda-back.vercel.app",
+    "http://panda-app-ruby.vercel.app",
     "https://panda-app-ruby.vercel.app",
 ]
 
