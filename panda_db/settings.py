@@ -39,7 +39,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8000",
     "https://panda-app-ruby.vercel.app",
-    "*"
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
