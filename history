@@ -1,2 +1,0 @@
-
-curl -X POST -H "Content-Type: application/json" -d '{"type": "employee","data": {"lookup_type": "dr","lookup_value": "ri"}}' http://localhost:8000/api/single/ --output employees.xlsx
