@@ -9,7 +9,7 @@ def get_routes():
         # print(current_route)
         current_route[
             "name"
-        ] = f"{current_route['id']}-{current_route['company']}-{current_route['shift']}".lower()
+        ] = f"{current_route['company']}-{current_route['shift']}".lower()
         employees_list = Employee.objects.filter(route_id=current_route["id"])
         employees_list_len = len(employees_list)
         current_route["employees"] = [employee.to_object() for employee in employees_list] if employees_list_len > 0 else []

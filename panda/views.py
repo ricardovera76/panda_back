@@ -1,8 +1,9 @@
 import json
-from django.http import JsonResponse
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse, FileResponse
 from rest_framework import generics
 from dotenv import load_dotenv
-from panda.scripts import driver_ctl, routes_ctl, employee_ctl, van_ctl, training_employee_ctl
+from panda.scripts import driver_ctl, routes_ctl, employee_ctl, single, van_ctl, training_employee_ctl
 
 
 load_dotenv()
@@ -25,12 +26,12 @@ class Drivers(generics.GenericAPIView):
         return JsonResponse(res, status=200)
 
     def post(self, req):
-        res = driver_ctl["create"](json.loads(req.body)["data"])
+        res = driver_ctl["create"](req.data["data"])
         return JsonResponse(res, status=200)
 
     def put(self, req):
-        req = json.loads(req.body)
-        res = driver_ctl["update"](req["driverId"], req["data"], req["type"])
+        req_data = req.data
+        res = driver_ctl["update"](req_data["driverId"], req_data["data"], req_data["type"])
         return JsonResponse(res, status=200)
 
     def delete(self, req):
@@ -48,12 +49,12 @@ class Employees(generics.GenericAPIView):
         return JsonResponse(res, status=200)
     
     def put(self, request):
-        req = json.loads(request.body)
-        res = employee_ctl["update"](req["employeeId"], req["data"], req["type"])
+        req_data = request.data
+        res = employee_ctl["update"](req_data["employeeId"], req_data["data"], req_data["type"])
         return JsonResponse(res, status=200)
     
     def post(self, req):
-        res = employee_ctl["create"](json.loads(req.body)["data"])
+        res = employee_ctl["create"](req.data["data"])
         return JsonResponse(res, status=200)
     
     def delete(self, req):
@@ -70,12 +71,12 @@ class Routes(generics.GenericAPIView):
         return JsonResponse(res, status=200)
 
     def put(self, request):
-        req = json.loads(request.body)
-        res = routes_ctl["update"](req["routeId"], req["data"], req["type"])
+        req_data = request.data
+        res = routes_ctl["update"](req_data["routeId"], req_data["data"], req_data["type"])
         return JsonResponse(res, status=200)
     
     def post(self, req):
-        res = routes_ctl["create"](json.loads(req.body)["data"])
+        res = routes_ctl["create"](req.data["data"])
         return JsonResponse(res, status=200)
     
     def delete(self, req):
@@ -92,12 +93,12 @@ class Vans(generics.GenericAPIView):
         return JsonResponse(res, status=200)
 
     def put(self, request):
-        req = json.loads(request.body)
-        res = van_ctl["update"](req["vanId"], req["data"], req["type"])
+        req_data = request.data
+        res = van_ctl["update"](req_data["vanId"], req_data["data"], req_data["type"])
         return JsonResponse(res, status=200)
     
     def post(self, req):
-        res = van_ctl["create"](json.loads(req.body)["data"])
+        res = van_ctl["create"](req.data["data"])
         return JsonResponse(res, status=200)
     
     def delete(self, req):
@@ -114,15 +115,38 @@ class TrainingEmployees(generics.GenericAPIView):
         return JsonResponse(res, status=200)
 
     def put(self, request):
-        req = json.loads(request.body)
-        res = training_employee_ctl["update"](req["trainingEmployeeId"], req["data"], req["type"])
+        req_data = request.data
+        res = training_employee_ctl["update"](req_data["trainingEmployeeId"], req_data["data"], req_data["type"])
         return JsonResponse(res, status=200)
     
     def post(self, req):
-        res = training_employee_ctl["create"](json.loads(req.body)["data"])
+        res = training_employee_ctl["create"](req.data["data"])
         return JsonResponse(res, status=200)
     
     def delete(self, req):
         training_employee_id = req.query_params.get("training_employee_id")
         res = training_employee_ctl["delete"](training_employee_id)
         return JsonResponse(res, status=200)
+
+
+# ========================================================================
+class SingleData(generics.GenericAPIView):
+    def post(self, request):
+        try:
+            data = request.data
+            request_type = data.get("type")
+            request_data = data.get("data")
+
+            if request_type is None or request_data is None:
+                return JsonResponse({"error": "Invalid request format"}, status=400)
+
+            response_data = single.get(request_type)
+            if response_data:
+                return response_data(request_data)
+            else:
+                return JsonResponse({"error": "Invalid request type"}, status=400)
+        except ObjectDoesNotExist as e:
+            return JsonResponse({"error": f"Object not found: {str(e)}"}, status=404)
+        except Exception as e:
+            return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
+
